@@ -24,7 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
         body.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
-        updateThemeIcon(newTheme);
         showNotification(`Tema alterado para ${newTheme === 'dark' ? 'escuro' : 'claro'}`);
     });
 
@@ -270,6 +269,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const onlineFriendsContainer = document.querySelector('.online-friends');
         if (!onlineFriendsContainer) return;
 
+        // Limpa o conteúdo existente para evitar duplicação
+        onlineFriendsContainer.innerHTML = '';
+
         const mockFriends = [
             { id: 2, name: "Miguel Piscki", avatar: "https://randomuser.me/api/portraits/men/22.jpg", status: "online" },
             { id: 4, name: "Eliezer B.", avatar: "https://randomuser.me/api/portraits/men/45.jpg", status: "online" },
@@ -277,17 +279,20 @@ document.addEventListener('DOMContentLoaded', () => {
             { id: 6, name: "Carlos Lima", avatar: "https://randomuser.me/api/portraits/men/51.jpg", status: "away" },
             { id: 7, name: "Laura Costa", avatar: "https://randomuser.me/api/portraits/women/55.jpg", status: "online" },
         ];
+        
         const friendsHTML = mockFriends.map(friend => `
             <div class="friend" data-id="${friend.id}" title="${friend.name}">
                 <div class="friend-avatar ${friend.status}"><img src="${friend.avatar}" alt="${friend.name}"></div>
                 <span>${friend.name.split(' ')[0]}</span>
             </div>`).join('');
+            
         onlineFriendsContainer.innerHTML = `
             <div class="section-header">
-                <h3><i class="fas fa-satellite-dish"></i> Amigos Online</h3>
+                <h3><i class="fas fa-user-friends"></i> Colegas Online</h3>
                 <a href="#" class="see-all">Ver todos</a>
             </div>
             <div class="friends-grid">${friendsHTML}</div>`;
+            
         onlineFriendsContainer.querySelectorAll('.friend').forEach(friend => {
             friend.addEventListener('click', () => {
                 showNotification(`Iniciando chat com ${friend.getAttribute('title')}`, 'info');
@@ -297,22 +302,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ==================== DADOS PARA WIDGETS ====================
     const mockEventos = [
-        { id: 5, titulo: "Semana da Cibersegurança", data: new Date(2025, 5, 9), formato: "Híbrido"},
-        { id: 2, titulo: "Workshop de Design de APIs com Node.js", data: new Date(2025, 6, 15), formato: "Online"},
-        { id: 6, titulo: "Construindo seu Portfólio de Dev", data: new Date(2025, 6, 12), formato: "Online"},
-        { id: 7, titulo: "Introdução à Cloud com AWS e Azure", data: new Date(2025, 5, 28), formato: "Online"},
-        { id: 3, titulo: "Feira de Carreiras Tech 2025", data: new Date(2025, 7, 5), formato: "Presencial"},
-        { id: 8, titulo: "SENAI Games: Torneio de E-Sports", data: new Date(2025, 7, 22), formato: "Presencial"},
-        { id: 1, titulo: "Hackathon de Inteligência Artificial", data: new Date(2025, 5, 20), formato: "Presencial"},
-        { id: 4, titulo: "Palestra: O Futuro da Computação Quântica", data: new Date(2025, 5, 1), formato: "Online"},
-        { id: 9, titulo: "Painel: Indústria 4.0 e o Papel do Técnico", data: new Date(2025, 4, 29), formato: "Híbrido"},
-        { id: 10, titulo: "Workshop: Como Brilhar no LinkedIn", data: new Date(2025, 4, 20), formato: "Online"},
-        { id: 11, titulo: "Bootcamp: Python para Análise de Dados", data: new Date(2025, 4, 15), formato: "Presencial"}
+        // Eventos com datas futuras para aparecer no widget
+        {
+          id: 5,
+          titulo: "Semana da Cibersegurança",
+          data: new Date(2025, 9, 9), // Setembro
+          formato: "Híbrido"
+        },
+        {
+          id: 2,
+          titulo: "Workshop de Design de APIs com Node.js",
+          data: new Date(2025, 9, 15), // Setembro
+          formato: "Online"
+        },
+        {
+          id: 6,
+          titulo: "Construindo seu Portfólio de Dev",
+          data: new Date(2025, 10, 12), // Outubro
+          formato: "Online"
+        },
+        {
+          id: 7,
+          titulo: "Introdução à Cloud com AWS e Azure",
+          data: new Date(2025, 11, 28), // Novembro
+          formato: "Online"
+        },
     ];
     
     const mockProjetos = [
-        { id: 101, titulo: "Sistema de Irrigação Automatizado com IoT", autor: "Ana Silva", avatarAutor: "https://randomuser.me/api/portraits/women/33.jpg", imagem: "https://images.unsplash.com/photo-1615143105096-74c04390cf33?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400" },
-        { id: 102, titulo: "Dashboard de Análise de Vendas em Power BI", autor: "Carlos Lima", avatarAutor: "https://randomuser.me/api/portraits/men/51.jpg", imagem: "https://images.unsplash.com/photo-1634733591032-15ac4c3411d3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400" },
+        { id: 101, titulo: "Sistema de Irrigação Automatizado com IoT", autor: "Ana Silva", avatarAutor: "https://randomuser.me/api/portraits/women/33.jpg", imagem: "/FrontEnd/img/p3.jpg" },
+        { id: 102, titulo: "Dashboard de Análise de Vendas em Power BI", autor: "Carlos Lima", avatarAutor: "https://randomuser.me/api/portraits/men/51.jpg", imagem: "img/tiProjeto.png" },
         { id: 103, titulo: "App de Gerenciamento de Tarefas em React", autor: "Julia Melo", avatarAutor: "https://randomuser.me/api/portraits/women/48.jpg", imagem: "https://images.unsplash.com/photo-1589652717521-10c0d0c2dea9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400" }
     ];
 
@@ -409,9 +428,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!postsContainer) return;
         const mockPosts = [
             { id: 1, author: { 
-                name: "Miguel Borges", avatar: "https://randomuser.me/api/portraits/men/22.jpg" }, 
+                name: "Miguel Piscki", avatar: "https://randomuser.me/api/portraits/men/22.jpg" }, 
                 content: "Finalizamos hoje o projeto de automação industrial usando Arduino e sensores IoT. O sistema monitora temperatura, umidade e controla atuadores remotamente!", 
-                images: ["/img/unnamed.png"], time: "Ontem", likes: 24, comments: [{ author: "Ana Silva", avatar: "https://randomuser.me/api/portraits/women/33.jpg", content: "Incrível, Miguel! Poderia compartilhar o código fonte?", time: "2h atrás" }] },
+                images: ["img/unnamed.png"], time: "Ontem", likes: 24, comments: [{ author: "Ana Silva", avatar: "https://randomuser.me/api/portraits/women/33.jpg", content: "Incrível, Miguel! Poderia compartilhar o código fonte?", time: "2h atrás" }] },
             
                 { id: 2, author: { name: "Eliezer Biancolini", 
                 avatar: "https://randomuser.me/api/portraits/men/45.jpg" }, 
@@ -421,12 +440,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 { id: 3, author: { 
                 name: "Gustavo Beltrame", avatar: "https://t4.ftcdn.net/jpg/02/24/86/95/360_F_224869519_aRaeLneqALfPNBzg0xxMZXghtvBXkfIA.jpg" }, 
                 content: "Desenvolvimento de um sistema que monitora o estoque em tempo real. A plataforma utiliza dados de consumo para prever a demanda futura e gera alertas automáticos para reposição de produtos, com o objetivo principal de otimizar o inventário, evitar perdas e reduzir custos operacionais.", 
-                images: ["/img/tiProjeto.png"], time: "12d", likes: 13, comments: [] },
+                images: ["img/tiProjeto.png"], time: "12d", likes: 13, comments: [] },
 
                 { id: 4, author: { 
                     name: "Ruth Azevedo", avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5tbMgjWv9P8gwFgrcjVgH7m8wqcTFOMpnXw&s" }, 
                     content: "Preciso projetar um mecanismo de acionamento para um pequeno robô explorador terrestre. A ideia é um sistema de locomoção com múltiplas pernas (hexápede ou octópede) que consiga se adaptar a terrenos irregulares.", 
-                    images: ["/img/robo.png"], time: "20d", likes: 30, comments: [{ author: "Naiara Piscke", avatar: "https://img.freepik.com/fotos-gratis/retrato-de-mulher-feliz-com-tablet-digital_329181-11681.jpg?semt=ais_hybrid&w=740", content: "Este projeto de robô tem um potencial incrível para explorar terrenos difíceis!" , time: "2h atrás" }] },
+                    images: ["img/robo.png"], time: "20d", likes: 30, comments: [{ author: "Naiara Piscke", avatar: "https://img.freepik.com/fotos-gratis/retrato-de-mulher-feliz-com-tablet-digital_329181-11681.jpg?semt=ais_hybrid&w=740", content: "Este projeto de robô tem um potencial incrível para explorar terrenos difíceis!" , time: "2h atrás" }] },
 
                     { id: 5, author: { name: "Lais Vitoria", 
                         avatar: "https://diariodocomercio.com.br/wp-content/uploads/2022/08/mulher-na-politica-eleicoes.jpg" }, 
