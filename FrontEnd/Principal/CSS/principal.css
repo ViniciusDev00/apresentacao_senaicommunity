@@ -936,31 +936,42 @@ body {
 }
 
 /* Notifications */
+/* Em FrontEnd/Principal/CSS/principal.css */
+
 .notification-center {
   position: fixed;
   top: 1rem;
   right: 1rem;
-  z-index: 1000;
+  z-index: 2000;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  width: 320px; /* Largura máxima */
+  max-width: 90%;
 }
 
 .notification {
-  padding: 0.75rem 1rem;
+  padding: 0.8rem 1.2rem;
   background-color: var(--bg-secondary);
+  color: var(--text-primary) !important; /* FORÇA a cor do texto a ser a correta */
   border: 1px solid var(--border-color);
   border-radius: var(--card-radius);
   box-shadow: var(--shadow);
-  transform: translateX(100%);
-  opacity: 0;
-  transition: all 0.3s ease;
   font-size: 0.875rem;
+  opacity: 0;
+  transform: translateX(100%);
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Transição com efeito */
+  
+  /* Garantias de layout */
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  word-break: break-word;
 }
 
 .notification.show {
-  transform: translateX(0);
   opacity: 1;
+  transform: translateX(0);
 }
 
 .notification.success {
@@ -1396,22 +1407,38 @@ input:focus, textarea:focus {
     border-radius: 50%;
 }
 
-/* Estilo do menu de notificações */
+/* Dentro de FrontEnd/Principal/CSS/principal.css */
+
+/* Estilo do menu de notificações (CORRIGIDO) */
 .notification-menu {
-  display: none; /* Inicialmente oculto */
+  display: block; /* Mantemos como block para a animação funcionar */
   position: absolute;
-  top: 50px; /* Ajuste conforme necessário */
+  top: 120%; /* Posição um pouco abaixo do ícone */
   right: 0;
   background-color: var(--bg-secondary);
-  width: 250px;
+  width: 300px; /* Um pouco mais largo para o conteúdo */
   border: 1px solid var(--border-color);
-  border-radius: 6px;
+  border-radius: var(--card-radius);
   box-shadow: var(--shadow);
-  z-index: 999;
+  z-index: 1001; /* Z-index maior para ficar sobre outros elementos */
+  
+  /* Animação para aparecer */
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none; /* Impede interação quando escondido */
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
+/* Classe que será adicionada via JS para mostrar o menu */
+.notification-menu.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto; /* Permite interação quando visível */
+}
+
+
 .notification-menu .notification {
-  padding: 0.75rem;
+  padding: 0.75rem 1rem;
   border-bottom: 1px solid var(--border-color);
   color: var(--text-primary);
 }
@@ -1422,4 +1449,5 @@ input:focus, textarea:focus {
 
 .notification-menu .notification p {
   font-size: 0.875rem;
+  margin: 0;
 }

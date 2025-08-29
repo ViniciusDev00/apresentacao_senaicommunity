@@ -1,6 +1,33 @@
 // @ts-nocheck
 document.addEventListener('DOMContentLoaded', () => {
 
+    // ==================== FUNÇÃO DE NOTIFICAÇÃO (CORRIGIDA) ====================
+    function showNotification(message, type = 'info') {
+        const notificationCenter = document.querySelector('.notification-center');
+        if (!notificationCenter) {
+            console.error('Elemento .notification-center não encontrado no DOM.');
+            return;
+        }
+
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        notificationCenter.appendChild(notification);
+
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 10);
+
+        setTimeout(() => {
+            notification.classList.remove('show');
+            notification.addEventListener('transitionend', () => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            });
+        }, 5000);
+    }
+
     // ==================== VARIÁVEIS GLOBAIS ====================
     const currentUser = {
         id: 1,
@@ -39,11 +66,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const sidebar = document.querySelector('.sidebar');
 
     if (window.innerWidth <= 768) {
-        menuToggle.style.display = 'block';
-        sidebar.classList.add('mobile-hidden');
+        if(menuToggle) menuToggle.style.display = 'block';
+        if(sidebar) sidebar.classList.add('mobile-hidden');
     }
 
-    menuToggle.addEventListener('click', () => {
+    menuToggle?.addEventListener('click', () => {
         sidebar.classList.toggle('mobile-hidden');
         menuToggle.innerHTML = sidebar.classList.contains('mobile-hidden') ?
             '<i class="fas fa-bars"></i>' :
@@ -54,31 +81,34 @@ document.addEventListener('DOMContentLoaded', () => {
     const userDropdown = document.querySelector('.user-dropdown');
     const dropdownMenu = document.querySelector('.dropdown-menu');
 
-    userDropdown.addEventListener('click', (e) => {
+    userDropdown?.addEventListener('click', (e) => {
         e.stopPropagation();
         dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
     });
 
     document.addEventListener('click', () => {
-        dropdownMenu.style.display = 'none';
+        if(dropdownMenu) dropdownMenu.style.display = 'none';
     });
-
-    // ==================== NOTIFICAÇÕES ====================
-    document.getElementById('notification-icon').addEventListener('click', function() {
+    
+    // ==================== NOTIFICAÇÕES (MENU DROPDOWN) ====================
+    const notificationIconContainer = document.querySelector('.nav-icon[data-tooltip="Notificações"]');
     const notificationMenu = document.getElementById('notification-menu');
-      // Alterna a visibilidade do menu de notificações
-      notificationMenu.style.display = (notificationMenu.style.display === 'block') ? 'none' : 'block';
-    });
 
-    // Fechar o menu se clicar fora dele
-    window.addEventListener('click', function(event) {
-      const notificationMenu = document.getElementById('notification-menu');
-      const notificationIcon = document.getElementById('notification-icon');
-      if (!notificationMenu.contains(event.target) && event.target !== notificationIcon) {
-        notificationMenu.style.display = 'none';
-      }
-    });
+    if (notificationIconContainer && notificationMenu) {
+        notificationIconContainer.addEventListener('click', function(event) {
+            event.stopPropagation();
+            notificationMenu.classList.toggle('show');
+        });
 
+        document.addEventListener('click', function(event) {
+            const isClickInsideMenu = notificationMenu.contains(event.target);
+            const isClickOnIcon = notificationIconContainer.contains(event.target);
+
+            if (notificationMenu.classList.contains('show') && !isClickInsideMenu && !isClickOnIcon) {
+                notificationMenu.classList.remove('show');
+            }
+        });
+    }
 
     // ==================== BARRA DE PESQUISA ====================
     const searchInput = document.querySelector('.search input');
@@ -102,26 +132,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function loadSearchResults(query = '') {
-        const mockResults = [{
-                id: 1,
-                name: "Curso de Desenvolvimento Web",
-                type: "course"
-            },
-            {
-                id: 2,
-                name: "Grupo de Projetos IoT",
-                type: "group"
-            },
-            {
-                id: 3,
-                name: "Miguel Piscki",
-                type: "user"
-            },
-            {
-                id: 4,
-                name: "Workshop de React",
-                type: "event"
-            }
+        const mockResults = [
+            { id: 1, name: "Curso de Desenvolvimento Web", type: "course" },
+            { id: 2, name: "Grupo de Projetos IoT", type: "group" },
+            { id: 3, name: "Miguel Piscki", type: "user" },
+            { id: 4, name: "Workshop de React", type: "event" }
         ];
 
         const filteredResults = mockResults.filter(item =>
@@ -145,12 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function getIconByType(type) {
-        const icons = {
-            course: 'book',
-            group: 'users',
-            user: 'user',
-            event: 'calendar'
-        };
+        const icons = { course: 'book', group: 'users', user: 'user', event: 'calendar' };
         return icons[type] || 'search';
     }
 
@@ -177,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function createPost(content, images = []) {
+    function createPost(content) {
         const postElement = document.createElement('div');
         postElement.className = 'post';
         postElement.dataset.id = Date.now();
@@ -286,10 +296,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function loadOnlineFriends() {
         const onlineFriendsContainer = document.querySelector('.online-friends');
         if (!onlineFriendsContainer) return;
-
-        // Limpa o conteúdo existente para evitar duplicação
         onlineFriendsContainer.innerHTML = '';
-
         const mockFriends = [
             { id: 2, name: "Miguel Piscki", avatar: "https://randomuser.me/api/portraits/men/22.jpg", status: "online" },
             { id: 4, name: "Eliezer B.", avatar: "https://randomuser.me/api/portraits/men/45.jpg", status: "online" },
@@ -297,20 +304,17 @@ document.addEventListener('DOMContentLoaded', () => {
             { id: 6, name: "Carlos Lima", avatar: "https://randomuser.me/api/portraits/men/51.jpg", status: "away" },
             { id: 7, name: "Laura Costa", avatar: "https://randomuser.me/api/portraits/women/55.jpg", status: "online" },
         ];
-        
         const friendsHTML = mockFriends.map(friend => `
             <div class="friend" data-id="${friend.id}" title="${friend.name}">
                 <div class="friend-avatar ${friend.status}"><img src="${friend.avatar}" alt="${friend.name}"></div>
                 <span>${friend.name.split(' ')[0]}</span>
             </div>`).join('');
-            
         onlineFriendsContainer.innerHTML = `
             <div class="section-header">
                 <h3><i class="fas fa-user-friends"></i> Colegas Online</h3>
                 <a href="#" class="see-all">Ver todos</a>
             </div>
             <div class="friends-grid">${friendsHTML}</div>`;
-            
         onlineFriendsContainer.querySelectorAll('.friend').forEach(friend => {
             friend.addEventListener('click', () => {
                 showNotification(`Iniciando chat com ${friend.getAttribute('title')}`, 'info');
@@ -318,190 +322,66 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ==================== DADOS PARA WIDGETS ====================
-    const mockEventos = [
-        // Eventos com datas futuras para aparecer no widget
-        {
-          id: 5,
-          titulo: "Semana da Cibersegurança",
-          data: new Date(2025, 9, 9), // Setembro
-          formato: "Híbrido"
-        },
-        {
-          id: 2,
-          titulo: "Workshop de Design de APIs com Node.js",
-          data: new Date(2025, 9, 15), // Setembro
-          formato: "Online"
-        },
-        {
-          id: 6,
-          titulo: "Construindo seu Portfólio de Dev",
-          data: new Date(2025, 10, 12), // Outubro
-          formato: "Online"
-        },
-        {
-          id: 7,
-          titulo: "Introdução à Cloud com AWS e Azure",
-          data: new Date(2025, 11, 28), // Novembro
-          formato: "Online"
-        },
-    ];
-    
-    const mockProjetos = [
-        { id: 101, titulo: "Sistema de Irrigação Automatizado com IoT", autor: "Ana Silva", avatarAutor: "https://randomuser.me/api/portraits/women/33.jpg", imagem: "../../img/irrigacao.jpg" },
-        { id: 102, titulo: "Dashboard de Análise de Vendas em Power BI", autor: "Carlos Lima", avatarAutor: "https://randomuser.me/api/portraits/men/51.jpg", imagem: "img/tiProjeto.png" },
-        { id: 103, titulo: "App de Gerenciamento de Tarefas em React", autor: "Julia Melo", avatarAutor: "https://randomuser.me/api/portraits/women/48.jpg", imagem: "https://images.unsplash.com/photo-1589652717521-10c0d0c2dea9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400" }
-    ];
-
-    // ==================== WIDGET DE EVENTOS ====================
-    function loadUpcomingEventsWidget() {
-        const widgetContainer = document.getElementById('upcoming-events-widget');
-        if (!widgetContainer) return;
-
-        const proximosEventos = mockEventos
-            .filter(evento => evento.data >= new Date())
-            .sort((a, b) => a.data - b.data)
-            .slice(0, 3);
+    // ==================== WIDGETS ====================
+    function loadAllWidgets() {
+        const mockEventos = [
+            { id: 5, titulo: "Semana da Cibersegurança", data: new Date(2025, 9, 9), formato: "Híbrido" },
+            { id: 2, titulo: "Workshop de APIs com Node.js", data: new Date(2025, 9, 15), formato: "Online" },
+            { id: 6, titulo: "Construindo seu Portfólio", data: new Date(2025, 10, 12), formato: "Online" }
+        ];
         
-        let widgetContent = `
-            <div class="widget-header">
-                <h3><i class="fas fa-calendar-star"></i> Próximos Eventos</h3>
-                <a href="evento.html" class="see-all">Ver todos</a>
-            </div>
-            <div class="events-preview-list">`;
-        if (proximosEventos.length > 0) {
-            proximosEventos.forEach(evento => {
-                const dia = evento.data.getDate();
-                const mes = evento.data.toLocaleString('pt-BR', { month: 'short' }).replace('.', '');
-                widgetContent += `
-                    <div class="event-preview-item">
-                        <div class="event-preview-date">
-                            <span>${dia}</span><span>${mes}</span>
-                        </div>
-                        <div class="event-preview-info">
-                            <h4>${evento.titulo}</h4>
-                            <p><i class="fas fa-map-marker-alt"></i> ${evento.formato}</p>
-                        </div>
-                    </div>`;
-            });
-        } else {
-            widgetContent += '<p class="empty-message">Nenhum evento programado.</p>';
+        const mockProjetos = [
+            { id: 101, titulo: "Irrigação Automatizada com IoT", autor: "Ana Silva", avatarAutor: "https://randomuser.me/api/portraits/women/33.jpg", imagem: "img/irrigacao.jpg" },
+            { id: 102, titulo: "Dashboard de Vendas em Power BI", autor: "Carlos Lima", avatarAutor: "https://randomuser.me/api/portraits/men/51.jpg", imagem: "img/tiProjeto.png" }
+        ];
+
+        const eventsWidget = document.getElementById('upcoming-events-widget');
+        if (eventsWidget) {
+            const proximosEventos = mockEventos.filter(e => e.data >= new Date()).sort((a, b) => a.data - b.data).slice(0, 3);
+            let eventsHTML = `<div class="widget-header"><h3><i class="fas fa-calendar-star"></i> Próximos Eventos</h3><a href="evento.html" class="see-all">Ver todos</a></div><div class="events-preview-list">`;
+            if (proximosEventos.length) {
+                proximosEventos.forEach(evento => {
+                    const dia = evento.data.getDate();
+                    const mes = evento.data.toLocaleString('pt-BR', { month: 'short' }).replace('.', '');
+                    eventsHTML += `<div class="event-preview-item"><div class="event-preview-date"><span>${dia}</span><span>${mes}</span></div><div class="event-preview-info"><h4>${evento.titulo}</h4><p><i class="fas fa-map-marker-alt"></i> ${evento.formato}</p></div></div>`;
+                });
+            } else {
+                eventsHTML += '<p class="empty-message">Nenhum evento programado.</p>';
+            }
+            eventsWidget.innerHTML = eventsHTML + '</div>';
         }
-        widgetContent += '</div>';
-        widgetContainer.innerHTML = widgetContent;
-    }
-    
-    // ==================== WIDGET DE PROJETOS EM DESTAQUE ====================
-    function loadFeaturedProjectsWidget() {
-        const widgetContainer = document.getElementById('featured-projects-widget');
-        if (!widgetContainer) return;
-    
-        const projetosEmDestaque = mockProjetos.slice(0, 2); 
-    
-        let widgetContent = `
-            <div class="widget-header">
-                <h3><i class="fas fa-lightbulb"></i> Projetos em Destaque</h3>
-                <a href="projeto.html" class="see-all">Ver todos</a>
-            </div>
-            <div class="project-preview-list">`;
-    
-        if (projetosEmDestaque.length > 0) {
-            projetosEmDestaque.forEach(projeto => {
-                widgetContent += `
-                    <a href="#" class="project-preview-item" title="${projeto.titulo}">
-                        <div class="project-preview-image">
-                            <img src="${projeto.imagem}" alt="${projeto.titulo}">
-                        </div>
-                        <div class="project-preview-info">
-                            <h4>${projeto.titulo}</h4>
-                            <p>
-                                <img src="${projeto.avatarAutor}" class="author-avatar" alt="${projeto.autor}">
-                                <span>Por ${projeto.autor}</span>
-                            </p>
-                        </div>
-                    </a>`;
+
+        const projectsWidget = document.getElementById('featured-projects-widget');
+        if (projectsWidget) {
+            let projectsHTML = `<div class="widget-header"><h3><i class="fas fa-lightbulb"></i> Projetos em Destaque</h3><a href="projeto.html" class="see-all">Ver todos</a></div><div class="project-preview-list">`;
+            mockProjetos.slice(0, 2).forEach(p => {
+                projectsHTML += `<a href="#" class="project-preview-item" title="${p.titulo}"><div class="project-preview-image"><img src="${p.imagem}" alt="${p.titulo}"></div><div class="project-preview-info"><h4>${p.titulo}</h4><p><img src="${p.avatarAutor}" class="author-avatar" alt="${p.autor}"><span>Por ${p.autor}</span></p></div></a>`;
             });
-        } else {
-            widgetContent += '<p class="empty-message">Nenhum projeto em destaque.</p>';
+            projectsWidget.innerHTML = projectsHTML + '</div>';
         }
-        widgetContent += '</div>';
-        widgetContainer.innerHTML = widgetContent;
     }
-
-// ==================== NOTIFICAÇÕES ====================
-document.getElementById('notification-icon').addEventListener('click', function(event) {
-    const notificationMenu = document.getElementById('notification-menu');
-    // Alterna a visibilidade do menu de notificações
-    notificationMenu.style.display = (notificationMenu.style.display === 'block') ? 'none' : 'block';
-    event.stopPropagation();  // Impede o clique de propagar e fechar o menu logo após
-});
-
-// Fechar o menu se clicar fora dele
-window.addEventListener('click', function(event) {
-    const notificationMenu = document.getElementById('notification-menu');
-    const notificationIcon = document.getElementById('notification-icon');
-    if (!notificationMenu.contains(event.target) && event.target !== notificationIcon) {
-        notificationMenu.style.display = 'none';
-    }
-});
-
 
     // ==================== CARREGAR POSTS INICIAIS ====================
     function loadInitialPosts() {
         if (!postsContainer) return;
         const mockPosts = [
-            { id: 1, author: { 
-                name: "Miguel Piscki", avatar: "https://randomuser.me/api/portraits/men/22.jpg" }, 
-                content: "Finalizamos hoje o projeto de automação industrial usando Arduino e sensores IoT. O sistema monitora temperatura, umidade e controla atuadores remotamente!", 
-                images: ["img/unnamed.png"], time: "Ontem", likes: 24, comments: [{ author: "Ana Silva", avatar: "https://randomuser.me/api/portraits/women/33.jpg", content: "Incrível, Miguel! Poderia compartilhar o código fonte?", time: "2h atrás" }] },
-            
-                { id: 2, author: { name: "Eliezer Biancolini", 
-                avatar: "https://randomuser.me/api/portraits/men/45.jpg" }, 
-                content: "Alguém interessado em formar um grupo de estudos para a maratona de programação? Estou pensando em reunir 3-5 pessoas para treinar 2x por semana.", 
-                images: [], time: "11h", likes: 11, comments: [] },
-
-                { id: 3, author: { 
-                name: "Gustavo Beltrame", avatar: "https://t4.ftcdn.net/jpg/02/24/86/95/360_F_224869519_aRaeLneqALfPNBzg0xxMZXghtvBXkfIA.jpg" }, 
-                content: "Desenvolvimento de um sistema que monitora o estoque em tempo real. A plataforma utiliza dados de consumo para prever a demanda futura e gera alertas automáticos para reposição de produtos, com o objetivo principal de otimizar o inventário, evitar perdas e reduzir custos operacionais.", 
-                images: ["img/tiProjeto.png"], time: "12d", likes: 13, comments: [] },
-
-                { id: 4, author: { 
-                    name: "Ruth Azevedo", avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5tbMgjWv9P8gwFgrcjVgH7m8wqcTFOMpnXw&s" }, 
-                    content: "Preciso projetar um mecanismo de acionamento para um pequeno robô explorador terrestre. A ideia é um sistema de locomoção com múltiplas pernas (hexápede ou octópede) que consiga se adaptar a terrenos irregulares.", 
-                    images: ["img/robo.png"], time: "20d", likes: 30, comments: [{ author: "Naiara Piscke", avatar: "https://img.freepik.com/fotos-gratis/retrato-de-mulher-feliz-com-tablet-digital_329181-11681.jpg?semt=ais_hybrid&w=740", content: "Este projeto de robô tem um potencial incrível para explorar terrenos difíceis!" , time: "2h atrás" }] },
-
-                    { id: 5, author: { name: "Lais Vitoria", 
-                        avatar: "https://diariodocomercio.com.br/wp-content/uploads/2022/08/mulher-na-politica-eleicoes.jpg" }, 
-                        content: "Estou buscando colaboradores com experiência em mecatrônica e eletroeletrônica para um projeto inovador. Se você tem paixão por robótica e automação, entre em contato!", 
-                        images: [], time: "21d", likes: 22, comments: [] },
+             { id: 1, author: { name: "Miguel Piscki", avatar: "https://randomuser.me/api/portraits/men/22.jpg" }, content: "Finalizamos hoje o projeto de automação industrial usando Arduino e sensores IoT. O sistema monitora temperatura, umidade e controla atuadores remotamente!", images: ["img/unnamed.png"], time: "Ontem", likes: 24, comments: [{ author: "Ana Silva", avatar: "https://randomuser.me/api/portraits/women/33.jpg", content: "Incrível, Miguel! Poderia compartilhar o código fonte?", time: "2h atrás" }] },
+             { id: 2, author: { name: "Eliezer Biancolini", avatar: "https://randomuser.me/api/portraits/men/45.jpg" }, content: "Alguém interessado em formar um grupo de estudos para a maratona de programação? Estou pensando em reunir 3-5 pessoas para treinar 2x por semana.", images: [], time: "11h", likes: 11, comments: [] },
+             { id: 3, author: { name: "Gustavo Beltrame", avatar: "https://t4.ftcdn.net/jpg/02/24/86/95/360_F_224869519_aRaeLneqALfPNBzg0xxMZXghtvBXkfIA.jpg" }, content: "Desenvolvimento de um sistema que monitora o estoque em tempo real...", images: ["img/tiProjeto.png"], time: "12d", likes: 13, comments: [] },
+             { id: 4, author: { name: "Ruth Azevedo", avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5tbMgjWv9P8gwFgrcjVgH7m8wqcTFOMpnXw&s" }, content: "Preciso projetar um mecanismo de acionamento para um pequeno robô explorador terrestre...", images: ["img/robo.png"], time: "20d", likes: 30, comments: [{ author: "Naiara Piscke", avatar: "https://img.freepik.com/fotos-gratis/retrato-de-mulher-feliz-com-tablet-digital_329181-11681.jpg?semt=ais_hybrid&w=740", content: "Este projeto tem um potencial incrível!" , time: "2h atrás" }] },
+             { id: 5, author: { name: "Lais Vitoria", avatar: "https://diariodocomercio.com.br/wp-content/uploads/2022/08/mulher-na-politica-eleicoes.jpg" }, content: "Estou buscando colaboradores com experiência em mecatrônica e eletroeletrônica para um projeto inovador.", images: [], time: "21d", likes: 22, comments: [] },
         ];
         postsContainer.innerHTML = '';
         mockPosts.forEach(postData => {
             const postElement = document.createElement('div');
             postElement.className = 'post';
             postElement.innerHTML = `
-                <div class="post-header">
-                    <div class="post-author">
-                        <div class="post-icon"><img src="${postData.author.avatar}" alt="${postData.author.name}"></div>
-                        <div class="post-info">
-                            <h2>${postData.author.name}</h2>
-                            <span>${postData.time} • <i class="fas fa-globe-americas"></i></span>
-                        </div>
-                    </div>
-                    <div class="post-options-btn"><i class="fas fa-ellipsis-h"></i></div>
-                </div>
+                <div class="post-header"><div class="post-author"><div class="post-icon"><img src="${postData.author.avatar}" alt="${postData.author.name}"></div><div class="post-info"><h2>${postData.author.name}</h2><span>${postData.time} • <i class="fas fa-globe-americas"></i></span></div></div><div class="post-options-btn"><i class="fas fa-ellipsis-h"></i></div></div>
                 <div class="post-text">${postData.content}</div>
                 ${postData.images.length ? `<div class="post-images"><img src="${postData.images[0]}" alt="Post image"></div>` : ''}
-                <div class="post-actions">
-                    <button class="like-btn"><i class="far fa-thumbs-up"></i> <span>Curtir</span> <span class="count">${postData.likes}</span></button>
-                    <button class="comment-btn"><i class="far fa-comment"></i> <span>Comentar</span> <span class="count">${postData.comments.length}</span></button>
-                    <button class="share-btn"><i class="far fa-share-square"></i> <span>Compartilhar</span></button>
-                </div>
+                <div class="post-actions"><button class="like-btn"><i class="far fa-thumbs-up"></i> <span>Curtir</span> <span class="count">${postData.likes}</span></button><button class="comment-btn"><i class="far fa-comment"></i> <span>Comentar</span> <span class="count">${postData.comments.length}</span></button><button class="share-btn"><i class="far fa-share-square"></i> <span>Compartilhar</span></button></div>
                 <div class="post-comments">${postData.comments.map(c => `<div class="comment"><div class="avatar-small"><img src="${c.avatar}" alt="${c.author}"></div><div class="comment-content"><div class="comment-header"><span class="comment-author">${c.author}</span><span class="comment-time">${c.time}</span></div><p>${c.content}</p></div></div>`).join('')}</div>
-                <div class="add-comment">
-                    <div class="avatar-small"><img src="${currentUser.avatar}" alt="${currentUser.name}"></div>
-                    <input type="text" placeholder="Adicione um comentário...">
-                </div>`;
+                <div class="add-comment"><div class="avatar-small"><img src="${currentUser.avatar}" alt="${currentUser.name}"></div><input type="text" placeholder="Adicione um comentário..."></div>`;
             postsContainer.appendChild(postElement);
             addPostEvents(postElement);
         });
@@ -512,8 +392,7 @@ window.addEventListener('click', function(event) {
         if (document.body.contains(document.querySelector('.posts-container'))) {
             loadInitialPosts();
             loadOnlineFriends();
-            loadUpcomingEventsWidget();
-            loadFeaturedProjectsWidget();
+            loadAllWidgets();
         }
     
         setTimeout(() => {
@@ -526,11 +405,13 @@ window.addEventListener('click', function(event) {
     // ==================== RESPONSIVIDADE ====================
     window.addEventListener('resize', () => {
         if (window.innerWidth <= 768) {
-            menuToggle.style.display = 'block';
+            if(menuToggle) menuToggle.style.display = 'block';
         } else {
-            menuToggle.style.display = 'none';
-            sidebar.classList.remove('mobile-hidden');
-            menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+            if(menuToggle) menuToggle.style.display = 'none';
+            if(sidebar) {
+                sidebar.classList.remove('mobile-hidden');
+                menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+            }
         }
     });
 });
