@@ -62,6 +62,23 @@ document.addEventListener('DOMContentLoaded', () => {
         dropdownMenu.style.display = 'none';
     });
 
+    // ==================== NOTIFICAÇÕES ====================
+    document.getElementById('notification-icon').addEventListener('click', function() {
+    const notificationMenu = document.getElementById('notification-menu');
+      // Alterna a visibilidade do menu de notificações
+      notificationMenu.style.display = (notificationMenu.style.display === 'block') ? 'none' : 'block';
+    });
+
+    // Fechar o menu se clicar fora dele
+    window.addEventListener('click', function(event) {
+      const notificationMenu = document.getElementById('notification-menu');
+      const notificationIcon = document.getElementById('notification-icon');
+      if (!notificationMenu.contains(event.target) && event.target !== notificationIcon) {
+        notificationMenu.style.display = 'none';
+      }
+    });
+
+
     // ==================== BARRA DE PESQUISA ====================
     const searchInput = document.querySelector('.search input');
     const searchResults = document.querySelector('.search-results');
@@ -410,18 +427,23 @@ document.addEventListener('DOMContentLoaded', () => {
         widgetContainer.innerHTML = widgetContent;
     }
 
-    // ==================== NOTIFICAÇÕES ====================
-    function showNotification(message, type = 'info') {
-        const notification = document.createElement('div');
-        notification.className = `notification ${type}`;
-        notification.textContent = message;
-        document.querySelector('.notification-center').appendChild(notification);
-        setTimeout(() => notification.classList.add('show'), 10);
-        setTimeout(() => {
-            notification.classList.remove('show');
-            setTimeout(() => notification.remove(), 300);
-        }, 3000);
+// ==================== NOTIFICAÇÕES ====================
+document.getElementById('notification-icon').addEventListener('click', function(event) {
+    const notificationMenu = document.getElementById('notification-menu');
+    // Alterna a visibilidade do menu de notificações
+    notificationMenu.style.display = (notificationMenu.style.display === 'block') ? 'none' : 'block';
+    event.stopPropagation();  // Impede o clique de propagar e fechar o menu logo após
+});
+
+// Fechar o menu se clicar fora dele
+window.addEventListener('click', function(event) {
+    const notificationMenu = document.getElementById('notification-menu');
+    const notificationIcon = document.getElementById('notification-icon');
+    if (!notificationMenu.contains(event.target) && event.target !== notificationIcon) {
+        notificationMenu.style.display = 'none';
     }
+});
+
 
     // ==================== CARREGAR POSTS INICIAIS ====================
     function loadInitialPosts() {

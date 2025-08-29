@@ -1395,3 +1395,31 @@ input:focus, textarea:focus {
     height: 16px;
     border-radius: 50%;
 }
+
+/* Estilo do menu de notificações */
+.notification-menu {
+  display: none; /* Inicialmente oculto */
+  position: absolute;
+  top: 50px; /* Ajuste conforme necessário */
+  right: 0;
+  background-color: var(--bg-secondary);
+  width: 250px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  box-shadow: var(--shadow);
+  z-index: 999;
+}
+
+.notification-menu .notification {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.notification-menu .notification:last-child {
+  border-bottom: none;
+}
+
+.notification-menu .notification p {
+  font-size: 0.875rem;
+}
