@@ -11,8 +11,51 @@
 </head>
 <body>
     <header class="topbar">
-        <div class="header-left"><h1 class="logo"><span class="highlight">SENAI </span>Community</h1></div><div class="search"><i class="fas fa-search"></i><input type="text" placeholder="Pesquisar projetos..."></div><nav class="nav-icons"><a href="/Principal/HTML/principal.html" data-tooltip="Feed"><i class="fas fa-home"></i></a><a href="/Mensagem/HTML/mensagem.html" data-tooltip="Mensagens"><i class="fas fa-comment-dots"></i></a><div class="nav-icon" data-tooltip="Notificações"><i class="fas fa-bell"></i><span class="badge">5</span></div><div class="theme-toggle" data-tooltip="Alternar tema"><i class="fas fa-moon"></i></div></nav><div class="user-dropdown"><div class="user"><div class="profile-pic"><img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Perfil"></div><span>Vinicius G.</span><i class="fas fa-chevron-down"></i></div><div class="dropdown-menu"><a href="#"><i class="fas fa-user"></i> Meu Perfil</a><a href="#"><i class="fas fa-cog"></i> Configurações</a><a href="#"><i class="fas fa-sign-out-alt"></i> Sair</a></div></div>
-    </header>
+    <div class="header-left">
+        <div class="menu-toggle">
+            <i class="fas fa-bars"></i>
+        </div>
+        <h1 class="logo"><span class="highlight">SENAI </span>Community</h1>
+    </div>
+
+    <div class="search">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Pesquisar cursos, projetos, amigos...">
+        <div class="search-results"></div>
+    </div>
+
+    <nav class="nav-icons">
+        <div class="nav-icon" data-tooltip="Início">
+            <a href="principal.html"><i class="fas fa-home"></i></a>
+        </div>
+        <div class="nav-icon" data-tooltip="Mensagens">
+            <a href="mensagem.html"><i class="fas fa-comment-dots"></i></a>
+            <span class="badge">3</span>
+        </div>
+        <div class="nav-icon" data-tooltip="Notificações">
+            <i class="fas fa-bell"></i>
+            <span class="badge">5</span>
+        </div>
+        <div class="theme-toggle" data-tooltip="Alternar tema">
+            <i class="fas fa-moon"></i>
+        </div>
+    </nav>
+
+    <div class="user-dropdown">
+        <div class="user">
+            <div class="profile-pic">
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Perfil">
+            </div>
+            <span>Vinicius G.</span>
+            <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="dropdown-menu">
+            <a href="#"><i class="fas fa-user"></i> Meu Perfil</a>
+            <a href="#"><i class="fas fa-cog"></i> Configurações</a>
+            <a href="principal.html"><i class="fas fa-sign-out-alt"></i> Sair</a>
+        </div>
+    </div>
+</header>
 
     <div class="container">
         <aside class="sidebar">

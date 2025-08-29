@@ -1,3 +1,4 @@
+// @ts-nocheck
 document.addEventListener('DOMContentLoaded', () => {
 
     // ==================== VARIÁVEIS GLOBAIS ====================
