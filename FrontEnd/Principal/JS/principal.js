@@ -330,7 +330,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
     
     const mockProjetos = [
-        { id: 101, titulo: "Sistema de Irrigação Automatizado com IoT", autor: "Ana Silva", avatarAutor: "https://randomuser.me/api/portraits/women/33.jpg", imagem: "/FrontEnd/img/p3.jpg" },
+        { id: 101, titulo: "Sistema de Irrigação Automatizado com IoT", autor: "Ana Silva", avatarAutor: "https://randomuser.me/api/portraits/women/33.jpg", imagem: "../../img/irrigacao.jpg" },
         { id: 102, titulo: "Dashboard de Análise de Vendas em Power BI", autor: "Carlos Lima", avatarAutor: "https://randomuser.me/api/portraits/men/51.jpg", imagem: "img/tiProjeto.png" },
         { id: 103, titulo: "App de Gerenciamento de Tarefas em React", autor: "Julia Melo", avatarAutor: "https://randomuser.me/api/portraits/women/48.jpg", imagem: "https://images.unsplash.com/photo-1589652717521-10c0d0c2dea9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400" }
     ];
