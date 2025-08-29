@@ -1,7 +1,12 @@
 // @ts-nocheck
 document.addEventListener('DOMContentLoaded', () => {
 
-    // ==================== FUNÇÃO DE NOTIFICAÇÃO (CORRIGIDA) ====================
+    // ==================== FUNÇÃO DE NOTIFICAÇÃO ====================
+    /**
+     * Exibe uma notificação flutuante na tela.
+     * @param {string} message - A mensagem a ser exibida.
+     * @param {string} [type='info'] - O tipo de notificação ('success', 'info', 'error').
+     */
     function showNotification(message, type = 'info') {
         const notificationCenter = document.querySelector('.notification-center');
         if (!notificationCenter) {
@@ -31,12 +36,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==================== VARIÁVEIS GLOBAIS ====================
     const currentUser = {
         id: 1,
-        name: "Vinicius Gallo Santos",
-        username: "Vinicius G.",
-        avatar: "https://randomuser.me/api/portraits/men/32.jpg",
-        title: "Estudante de ADS",
-        connections: 11,
-        projects: 2
+        name: "Usuário Temporario",
+        username: "Usuário T.",
+        avatar: "img/perfil.png",
+        title: "Sem Curso",
+        connections: 0,
+        projects: 0
     };
 
     // ==================== GERENCIAMENTO DE TEMA ====================
@@ -187,7 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function createPost(content) {
+    function createPost(content, images = []) {
         const postElement = document.createElement('div');
         postElement.className = 'post';
         postElement.dataset.id = Date.now();
@@ -322,43 +327,93 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ==================== WIDGETS ====================
-    function loadAllWidgets() {
-        const mockEventos = [
-            { id: 5, titulo: "Semana da Cibersegurança", data: new Date(2025, 9, 9), formato: "Híbrido" },
-            { id: 2, titulo: "Workshop de APIs com Node.js", data: new Date(2025, 9, 15), formato: "Online" },
-            { id: 6, titulo: "Construindo seu Portfólio", data: new Date(2025, 10, 12), formato: "Online" }
-        ];
+    // ==================== DADOS PARA WIDGETS ====================
+    const mockEventos = [
+        { id: 5, titulo: "Semana da Cibersegurança", data: new Date(2025, 9, 9), formato: "Híbrido" },
+        { id: 2, titulo: "Workshop de Design de APIs com Node.js", data: new Date(2025, 9, 15), formato: "Online" },
+        { id: 6, titulo: "Construindo seu Portfólio de Dev", data: new Date(2025, 10, 12), formato: "Online" },
+        { id: 7, titulo: "Introdução à Cloud com AWS e Azure", data: new Date(2025, 11, 28), formato: "Online" },
+    ];
+    
+    const mockProjetos = [
+        { id: 101, titulo: "Sistema de Irrigação Automatizado com IoT", autor: "Ana Silva", avatarAutor: "https://randomuser.me/api/portraits/women/33.jpg", imagem: "img/irrigacao.jpg" },
+        { id: 102, titulo: "Dashboard de Análise de Vendas em Power BI", autor: "Carlos Lima", avatarAutor: "https://randomuser.me/api/portraits/men/51.jpg", imagem: "img/tiProjeto.png" },
+        { id: 103, titulo: "App de Gerenciamento de Tarefas em React", autor: "Julia Melo", avatarAutor: "https://randomuser.me/api/portraits/women/48.jpg", imagem: "https://images.unsplash.com/photo-1589652717521-10c0d0c2dea9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400" }
+    ];
+
+    // ==================== WIDGET DE EVENTOS ====================
+    function loadUpcomingEventsWidget() {
+        const widgetContainer = document.getElementById('upcoming-events-widget');
+        if (!widgetContainer) return;
+
+        const proximosEventos = mockEventos
+            .filter(evento => evento.data >= new Date())
+            .sort((a, b) => a.data - b.data)
+            .slice(0, 3);
         
-        const mockProjetos = [
-            { id: 101, titulo: "Irrigação Automatizada com IoT", autor: "Ana Silva", avatarAutor: "https://randomuser.me/api/portraits/women/33.jpg", imagem: "img/irrigacao.jpg" },
-            { id: 102, titulo: "Dashboard de Vendas em Power BI", autor: "Carlos Lima", avatarAutor: "https://randomuser.me/api/portraits/men/51.jpg", imagem: "img/tiProjeto.png" }
-        ];
-
-        const eventsWidget = document.getElementById('upcoming-events-widget');
-        if (eventsWidget) {
-            const proximosEventos = mockEventos.filter(e => e.data >= new Date()).sort((a, b) => a.data - b.data).slice(0, 3);
-            let eventsHTML = `<div class="widget-header"><h3><i class="fas fa-calendar-star"></i> Próximos Eventos</h3><a href="evento.html" class="see-all">Ver todos</a></div><div class="events-preview-list">`;
-            if (proximosEventos.length) {
-                proximosEventos.forEach(evento => {
-                    const dia = evento.data.getDate();
-                    const mes = evento.data.toLocaleString('pt-BR', { month: 'short' }).replace('.', '');
-                    eventsHTML += `<div class="event-preview-item"><div class="event-preview-date"><span>${dia}</span><span>${mes}</span></div><div class="event-preview-info"><h4>${evento.titulo}</h4><p><i class="fas fa-map-marker-alt"></i> ${evento.formato}</p></div></div>`;
-                });
-            } else {
-                eventsHTML += '<p class="empty-message">Nenhum evento programado.</p>';
-            }
-            eventsWidget.innerHTML = eventsHTML + '</div>';
-        }
-
-        const projectsWidget = document.getElementById('featured-projects-widget');
-        if (projectsWidget) {
-            let projectsHTML = `<div class="widget-header"><h3><i class="fas fa-lightbulb"></i> Projetos em Destaque</h3><a href="projeto.html" class="see-all">Ver todos</a></div><div class="project-preview-list">`;
-            mockProjetos.slice(0, 2).forEach(p => {
-                projectsHTML += `<a href="#" class="project-preview-item" title="${p.titulo}"><div class="project-preview-image"><img src="${p.imagem}" alt="${p.titulo}"></div><div class="project-preview-info"><h4>${p.titulo}</h4><p><img src="${p.avatarAutor}" class="author-avatar" alt="${p.autor}"><span>Por ${p.autor}</span></p></div></a>`;
+        let widgetContent = `
+            <div class="widget-header">
+                <h3><i class="fas fa-calendar-star"></i> Próximos Eventos</h3>
+                <a href="evento.html" class="see-all">Ver todos</a>
+            </div>
+            <div class="events-preview-list">`;
+        if (proximosEventos.length > 0) {
+            proximosEventos.forEach(evento => {
+                const dia = evento.data.getDate();
+                const mes = evento.data.toLocaleString('pt-BR', { month: 'short' }).replace('.', '');
+                widgetContent += `
+                    <div class="event-preview-item">
+                        <div class="event-preview-date">
+                            <span>${dia}</span><span>${mes}</span>
+                        </div>
+                        <div class="event-preview-info">
+                            <h4>${evento.titulo}</h4>
+                            <p><i class="fas fa-map-marker-alt"></i> ${evento.formato}</p>
+                        </div>
+                    </div>`;
             });
-            projectsWidget.innerHTML = projectsHTML + '</div>';
+        } else {
+            widgetContent += '<p class="empty-message">Nenhum evento programado.</p>';
         }
+        widgetContent += '</div>';
+        widgetContainer.innerHTML = widgetContent;
+    }
+    
+    // ==================== WIDGET DE PROJETOS EM DESTAQUE ====================
+    function loadFeaturedProjectsWidget() {
+        const widgetContainer = document.getElementById('featured-projects-widget');
+        if (!widgetContainer) return;
+    
+        const projetosEmDestaque = mockProjetos.slice(0, 2); 
+    
+        let widgetContent = `
+            <div class="widget-header">
+                <h3><i class="fas fa-lightbulb"></i> Projetos em Destaque</h3>
+                <a href="projeto.html" class="see-all">Ver todos</a>
+            </div>
+            <div class="project-preview-list">`;
+    
+        if (projetosEmDestaque.length > 0) {
+            projetosEmDestaque.forEach(projeto => {
+                widgetContent += `
+                    <a href="#" class="project-preview-item" title="${projeto.titulo}">
+                        <div class="project-preview-image">
+                            <img src="${projeto.imagem}" alt="${projeto.titulo}">
+                        </div>
+                        <div class="project-preview-info">
+                            <h4>${projeto.titulo}</h4>
+                            <p>
+                                <img src="${projeto.avatarAutor}" class="author-avatar" alt="${projeto.autor}">
+                                <span>Por ${projeto.autor}</span>
+                            </p>
+                        </div>
+                    </a>`;
+            });
+        } else {
+            widgetContent += '<p class="empty-message">Nenhum projeto em destaque.</p>';
+        }
+        widgetContent += '</div>';
+        widgetContainer.innerHTML = widgetContent;
     }
 
     // ==================== CARREGAR POSTS INICIAIS ====================
@@ -389,10 +444,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ==================== INICIALIZAÇÃO ====================
     function init() {
+        if (document.querySelector('.sidebar')) {
+            loadOnlineFriends();
+        }
+        
         if (document.body.contains(document.querySelector('.posts-container'))) {
             loadInitialPosts();
-            loadOnlineFriends();
-            loadAllWidgets();
+            loadUpcomingEventsWidget();
+            loadFeaturedProjectsWidget();
         }
     
         setTimeout(() => {
@@ -410,7 +469,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if(menuToggle) menuToggle.style.display = 'none';
             if(sidebar) {
                 sidebar.classList.remove('mobile-hidden');
-                menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                if(menuToggle) menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
             }
         }
     });
