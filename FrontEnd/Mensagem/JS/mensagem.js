@@ -24,7 +24,7 @@ const ChatApp = {
                 ]
             },
             {
-                id: 'g2', type: 'group', nome: "PrecisionCraft", avatar: "/img/cnc.png",
+                id: 'g2', type: 'group', nome: "PrecisionCraft", avatar: "/FrontEnd/img/cnc.png",
                 membros: [{ id: 1, nome: "Vinicius Gallo Santos", avatar: "https://randomuser.me/api/portraits/men/32.jpg" },  { id: 2, nome: "Julia", avatar: "https://randomuser.me/api/portraits/men/22.jpg" }, 
                     { id: 8, nome: "Carlos", avatar: "https://randomuser.me/api/portraits/men/32.jpg" }, { id: 9, nome: "Laura", avatar: "https://randomuser.me/api/portraits/men/22.jpg" }
                 ],

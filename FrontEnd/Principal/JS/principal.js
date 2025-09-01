@@ -391,10 +391,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ==================== INICIALIZAÇÃO ====================
     function init() {
+        // Modificação: a lista de amigos online e os widgets agora carregam em todas as páginas
+        loadOnlineFriends();
+        loadAllWidgets();
+
+        // O conteúdo específico do feed (posts) só carrega se o container existir
         if (document.body.contains(document.querySelector('.posts-container'))) {
             loadInitialPosts();
-            loadOnlineFriends();
-            loadAllWidgets();
         }
     
         setTimeout(() => {
