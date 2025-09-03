@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
         id: 1,
         name: "Vinicius Gallo Santos",
         username: "Vinicius G.",
-        avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+        avatar: "img/viniciusGallo.jpg",
         title: "Estudante de ADS",
         connections: 11,
         projects: 2
@@ -52,7 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
         body.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
-        showNotification(`Tema alterado para ${newTheme === 'dark' ? 'escuro' : 'claro'}`);
     });
 
     function updateThemeIcon(theme) {
@@ -90,13 +89,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if(dropdownMenu) dropdownMenu.style.display = 'none';
     });
     
-    // ==================== NOTIFICAÇÕES (MENU DROPDOWN) - CÓDIGO CORRIGIDO ====================
+    // ==================== NOTIFICAÇÕES (MENU DROPDOWN) ====================
     const notificationIconContainer = document.querySelector('.nav-icon[data-tooltip="Notificações"]');
     const notificationMenu = document.getElementById('notification-menu');
 
     if (notificationIconContainer && notificationMenu) {
         notificationIconContainer.addEventListener('click', function(event) {
-            // Impede que um clique DENTRO do menu aberto feche o próprio menu.
             if (notificationMenu.contains(event.target)) {
                 return;
             }
@@ -105,7 +103,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         document.addEventListener('click', function(event) {
-            // Lógica simplificada: se o menu estiver aberto e o clique for fora de todo o seu contêiner, feche-o.
             if (notificationMenu.classList.contains('show') && !notificationIconContainer.contains(event.target)) {
                 notificationMenu.classList.remove('show');
             }
@@ -193,6 +190,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const postElement = document.createElement('div');
         postElement.className = 'post';
         postElement.dataset.id = Date.now();
+        // ◀-- ALTERAÇÃO 1: Adiciona o nome do autor ao post criado
+        postElement.dataset.authorName = currentUser.name; 
         postElement.innerHTML = `
             <div class="post-header">
                 <div class="post-author">
@@ -249,19 +248,34 @@ document.addEventListener('DOMContentLoaded', () => {
         shareBtn.addEventListener('click', () => showNotification('Post compartilhado com sucesso!'));
     }
 
-    function showPostOptionsMenu(postElement, target) {
+    // ◀-- ALTERAÇÃO 2: Lógica do menu de opções totalmente reescrita
+    function showPostOptionsMenu(postElement, targetButton) {
+        // Remove menus antigos
         document.querySelectorAll('.post-options-menu').forEach(menu => menu.remove());
+
         const menu = document.createElement('div');
         menu.className = 'post-options-menu';
-        menu.innerHTML = `
-            <button data-action="save"><i class="far fa-bookmark"></i> Salvar</button>
-            <button data-action="edit"><i class="far fa-edit"></i> Editar</button>
-            <button data-action="delete"><i class="far fa-trash-alt"></i> Excluir</button>`;
+        
+        // Verifica se o post é do usuário atual
+        const isMyPost = postElement.dataset.authorName === currentUser.name;
+
+        // Monta o HTML do menu dinamicamente
+        let menuHTML = `<button data-action="save"><i class="far fa-bookmark"></i> Salvar</button>`;
+        if (isMyPost) {
+            menuHTML += `
+                <button data-action="edit"><i class="far fa-edit"></i> Editar</button>
+                <button data-action="delete"><i class="far fa-trash-alt"></i> Excluir</button>
+            `;
+        }
+        menu.innerHTML = menuHTML;
+
         document.body.appendChild(menu);
 
-        const rect = target.getBoundingClientRect();
+        // Lógica de posicionamento corrigida
+        const rect = targetButton.getBoundingClientRect();
         menu.style.top = `${rect.bottom + window.scrollY}px`;
-        menu.style.left = `${rect.left + window.scrollX - 150}px`;
+        // Alinha a direita do menu com a direita do botão
+        menu.style.right = `${window.innerWidth - rect.right}px`; 
 
         menu.addEventListener('click', (e) => {
             const action = e.target.closest('button').dataset.action;
@@ -273,6 +287,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             menu.remove();
         });
+        
+        // Fecha o menu se clicar em qualquer outro lugar
         setTimeout(() => document.addEventListener('click', () => menu.remove(), { once: true }), 10);
     }
 
@@ -377,6 +393,8 @@ document.addEventListener('DOMContentLoaded', () => {
         mockPosts.forEach(postData => {
             const postElement = document.createElement('div');
             postElement.className = 'post';
+            // ◀-- ALTERAÇÃO 3: Adiciona o nome do autor aos posts da lista
+            postElement.dataset.authorName = postData.author.name;
             postElement.innerHTML = `
                 <div class="post-header"><div class="post-author"><div class="post-icon"><img src="${postData.author.avatar}" alt="${postData.author.name}"></div><div class="post-info"><h2>${postData.author.name}</h2><span>${postData.time} • <i class="fas fa-globe-americas"></i></span></div></div><div class="post-options-btn"><i class="fas fa-ellipsis-h"></i></div></div>
                 <div class="post-text">${postData.content}</div>
@@ -391,16 +409,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ==================== INICIALIZAÇÃO ====================
     function init() {
-        // Modificação: a lista de amigos online e os widgets agora carregam em todas as páginas
         loadOnlineFriends();
         loadAllWidgets();
-
-        // O conteúdo específico do feed (posts) só carrega se o container existir
         if (document.body.contains(document.querySelector('.posts-container'))) {
             loadInitialPosts();
         }
-    
-      
     }
     
     init();
