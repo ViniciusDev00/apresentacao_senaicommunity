@@ -384,7 +384,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function loadInitialPosts() {
         if (!postsContainer) return;
         const mockPosts = [
-             { id: 1, author: { name: "Miguel Piscki", avatar: "https://randomuser.me/api/portraits/men/22.jpg" }, content: "Finalizamos hoje o projeto de automação industrial usando Arduino e sensores IoT. O sistema monitora temperatura, umidade e controla atuadores remotamente!", images: ["./img/unnamed.png"], time: "Ontem", likes: 24, comments: [{ author: "Ana Silva", avatar: "https://randomuser.me/api/portraits/women/33.jpg", content: "Incrível, Miguel! Poderia compartilhar o código fonte?", time: "2h atrás" }] },
+             { id: 1, author: { name: "Miguel Piscki", avatar: "https://randomuser.me/api/portraits/men/22.jpg" }, content: "Finalizamos hoje o projeto de automação industrial usando Arduino e sensores IoT. O sistema monitora temperatura, umidade e controla atuadores remotamente!", images: [], time: "Ontem", likes: 24, comments: [{ author: "Ana Silva", avatar: "https://randomuser.me/api/portraits/women/33.jpg", content: "Incrível, Miguel! Poderia compartilhar o código fonte?", time: "2h atrás" }] },
              { id: 2, author: { name: "Eliezer Biancolini", avatar: "https://randomuser.me/api/portraits/men/45.jpg" }, content: "Alguém interessado em formar um grupo de estudos para a maratona de programação? Estou pensando em reunir 3-5 pessoas para treinar 2x por semana.", images: [], time: "11h", likes: 11, comments: [] },
              { id: 3, author: { name: "Gustavo Beltrame", avatar: "https://t4.ftcdn.net/jpg/02/24/86/95/360_F_224869519_aRaeLneqALfPNBzg0xxMZXghtvBXkfIA.jpg" }, content: "Desenvolvimento de um sistema que monitora o estoque em tempo real...", images: ["./img/tiProjeto.png"], time: "12d", likes: 13, comments: [] },
              { id: 4, author: { name: "Ruth Azevedo", avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5tbMgjWv9P8gwFgrcjVgH7m8wqcTFOMpnXw&s" }, content: "Preciso projetar um mecanismo de acionamento para um pequeno robô explorador terrestre...", images: ["./img/robo.png"], time: "20d", likes: 30, comments: [{ author: "Naiara Piscke", avatar: "https://img.freepik.com/fotos-gratis/retrato-de-mulher-feliz-com-tablet-digital_329181-11681.jpg?semt=ais_hybrid&w=740", content: "Este projeto tem um potencial incrível!" , time: "2h atrás" }] },
@@ -415,7 +415,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (document.body.contains(document.querySelector('.posts-container'))) {
             loadInitialPosts();
         }
-    }
+    }   
     
     init();
 
