@@ -6,14 +6,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // Pega o elemento da barra de pesquisa pelo ID
   const searchInput = document.getElementById('search-input');
 
-  // Simulação de dados de eventos
   const mockEventos = [
-    // --- EVENTOS FUTUROS ---
+    // --- EVENTOS FUTUROS (Datas corrigidas para 2025) ---
     {
       id: 5,
       titulo: "Semana da Cibersegurança: Defenda-se no Mundo Digital",
       imagem: "https://images.unsplash.com/photo-1563206767-5b18f218e8de?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-      data: new Date(2025, 5, 13), // 13 de Junho de 2025 (já passou da data atual)
+      data: new Date(2025, 9, 9), // Mês 9 = Outubro
       hora: "19:00 - 21:00 (dias 9 a 13)",
       local: "Online e Laboratório 5",
       formato: "Híbrido",
@@ -24,18 +23,18 @@ document.addEventListener('DOMContentLoaded', () => {
       id: 2,
       titulo: "Workshop de Design de APIs com Node.js",
       imagem: "https://images.unsplash.com/photo-1521185496955-15097b20c5fe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-      data: new Date(2025, 6, 15), // 15 de Julho de 2025
+      data: new Date(2025, 9, 15), // Mês 9 = Outubro
       hora: "19:00 - 22:00",
       local: "Plataforma Zoom",
       formato: "Online",
       categoria: "Tecnologia",
-      confirmado: true
+      confirmado: false
     },
     {
       id: 6,
       titulo: "Workshop: Construindo seu Portfólio de Desenvolvedor",
       imagem: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-      data: new Date(2025, 6, 12), // 12 de Julho de 2025
+      data: new Date(2025, 10, 12), // Mês 10 = Novembro
       hora: "10:00 - 13:00",
       local: "YouTube Live",
       formato: "Online",
@@ -46,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
       id: 7,
       titulo: "Introdução à Cloud com AWS e Azure",
       imagem: "https://images.unsplash.com/photo-1510915228340-29c85a43dcfe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-      data: new Date(2025, 5, 28), // 28 de Junho de 2025
+      data: new Date(2025, 9, 28), // Mês 9 = Outubro
       hora: "14:00 - 18:00",
       local: "Plataforma Teams",
       formato: "Online",
@@ -57,80 +56,23 @@ document.addEventListener('DOMContentLoaded', () => {
       id: 3,
       titulo: "Feira de Carreiras Tech 2025",
       imagem: "https://images.unsplash.com/photo-1556761175-b413da4baf72?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-      data: new Date(2025, 7, 5), // 05 de Agosto de 2025
+      data: new Date(2025, 10, 5), // Mês 10 = Novembro
       hora: "10:00 - 17:00",
       local: "Ginásio de Esportes",
       formato: "Presencial",
       categoria: "Carreira",
       confirmado: false
     },
-    {
-      id: 8,
-      titulo: "SENAI Games: Torneio de E-Sports",
-      imagem: "https://images.unsplash.com/photo-1542751371-adc38448a05e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-      data: new Date(2025, 7, 22), // 22 de Agosto de 2025
-      hora: "Dia todo",
-      local: "Arena Gamer SENAI",
-      formato: "Presencial",
-      categoria: "Competição",
-      confirmado: false
-    },
-    {
-      id: 1,
-      titulo: "Hackathon de Inteligência Artificial",
-      // CORREÇÃO AQUI
-      imagem: "../../img/unnamed.png",      
-      data: new Date(2025, 5, 20), // 20 de Junho de 2025
-      hora: "09:00 - 18:00 (dois dias)",
-      local: "Auditório Principal SENAI",
-      formato: "Presencial",
-      categoria: "Competição",
-      confirmado: false
-    },
-    
     // --- EVENTOS PASSADOS ---
     {
       id: 4,
       titulo: "Palestra: O Futuro da Computação Quântica",
       imagem: "https://images.unsplash.com/photo-1635070045091-d3a3f5a0e9aa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-      data: new Date(2025, 5, 1), // 01 de Junho de 2025
+      data: new Date(2025, 4, 1), // Maio
       hora: "20:00",
       local: "YouTube Live",
       formato: "Online",
       categoria: "Inovação",
-      confirmado: false
-    },
-    {
-      id: 9,
-      titulo: "Painel: Indústria 4.0 e o Papel do Técnico",
-      imagem: "https://images.unsplash.com/photo-1581092921462-63f1c11d95ea?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-      data: new Date(2025, 4, 29), // 29 de Maio de 2025
-      hora: "19:30",
-      local: "Teatro SENAI",
-      formato: "Híbrido",
-      categoria: "Inovação",
-      confirmado: false
-    },
-    {
-      id: 10,
-      titulo: "Workshop: Como Brilhar no LinkedIn",
-      imagem: "https://images.unsplash.com/photo-1611944212129-29955ae402c3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-      data: new Date(2025, 4, 20), // 20 de Maio de 2025
-      hora: "19:00 - 21:00",
-      local: "Plataforma Zoom",
-      formato: "Online",
-      categoria: "Carreira",
-      confirmado: false
-    },
-     {
-      id: 11,
-      titulo: "Bootcamp: Python para Análise de Dados",
-      imagem: "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-      data: new Date(2025, 4, 15), // 15 de Maio de 2025
-      hora: "18:30 - 22:30",
-      local: "Laboratório 3",
-      formato: "Presencial",
-      categoria: "Tecnologia",
       confirmado: false
     }
   ];
