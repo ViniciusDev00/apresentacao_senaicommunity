@@ -675,9 +675,10 @@ body {
 .notification.info { border-left: 4px solid var(--accent-primary); }
 .notification.error { border-left: 4px solid var(--danger); }
 
+
 /* Menu Dropdown de Notificações */
 .notification-menu {
-  display: block;
+  display: block; /* Este é o problema */
   position: absolute;
   top: 120%;
   right: 0;

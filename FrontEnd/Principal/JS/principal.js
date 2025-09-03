@@ -400,9 +400,7 @@ document.addEventListener('DOMContentLoaded', () => {
             loadInitialPosts();
         }
     
-        setTimeout(() => {
-            showNotification(`Bem-vindo de volta, ${currentUser.name.split(' ')[0]}!`, 'success');
-        }, 1000);
+      
     }
     
     init();
