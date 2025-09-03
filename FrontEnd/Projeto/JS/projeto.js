@@ -8,7 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 {
                     id: 1,
                     titulo: "Projeto IoT",
-                    imagem: "/img/unnamed.png",
+                    // CORREÇÃO AQUI
+                    imagem: "./img/unnamed.png",
                     descricao: "Esta solução inovadora, baseada na plataforma Arduino, utiliza sensores IoT de precisão para monitorar em tempo real variáveis críticas como temperatura e umidade, garantindo um controle de ambiente rigoroso e eficiente.",
                     membros: [{ nome: "Ana Silva", avatar: "https://randomuser.me/api/portraits/women/33.jpg" }, { nome: "Miguel Piscki", avatar: "https://randomuser.me/api/portraits/men/22.jpg" }],
                     tecnologias: ["Arduino", "C++", "Node.js", "Servo Motor"],
@@ -17,7 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 {
                     id: 2,
                     titulo: "Projeto: Torno CNC Modular PrecisionCraft",
-                    imagem: "/img/cnc.png",
+                    // CORREÇÃO AQUI
+                    imagem: "./img/cnc.png",
                     descricao: "Este projeto é um Torno CNC Modular moderno e robusto, feito para usinagem de alta precisão. Ele é versátil, podendo trabalhar com diversos materiais e formas complexas, e é ideal para oficinas, educação e pesquisa. Seu design fácil de manter e customizar permite que os usuários o adaptem às suas necessidades.",
                     membros: [{ nome: "Laura", avatar: "https://randomuser.me/api/portraits/women/55.jpg" }, { nome: " Carlos", avatar: "http://randomuser.me/api/portraits/men/51.jpg" }, { nome: "Julia", avatar: "https://randomuser.me/api/portraits/women/48.jpg" }],
                     tecnologias: ["Controle Numérico Computadorizado (CNC)", "Servomotores de Precisão", "Sistemas de Guias Lineares", "Fuso de Esferas Motor", "Software CAD/CAM", "Sensores de Feedback", "Estrutura Modular"],
@@ -84,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     titulo: form.querySelector('#proj-titulo').value,
                     descricao: form.querySelector('#proj-descricao').value,
                     imagem: form.querySelector('#proj-imagem').value || 'https://placehold.co/600x400/161b22/ffffff?text=Novo+Projeto',
-                    membros: [{ nome: "Vinicius G.", avatar: "img/perfil.png" }],
+                    membros: [{ nome: "Vinicius G.", avatar: "./img/perfil.png" }],
                     tecnologias: form.querySelector('#proj-techs').value.split(',').map(t => t.trim()),
                     categoria: 'web'
                 };

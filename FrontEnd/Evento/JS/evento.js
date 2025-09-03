@@ -78,7 +78,8 @@ document.addEventListener('DOMContentLoaded', () => {
     {
       id: 1,
       titulo: "Hackathon de Inteligência Artificial",
-      imagem: "https://www.aen.pr.gov.br/sites/default/arquivos_restritos/files/imagem/2024-09/hackathon_copel_11_0.jpg",      
+      // CORREÇÃO AQUI
+      imagem: "../../img/unnamed.png",      
       data: new Date(2025, 5, 20), // 20 de Junho de 2025
       hora: "09:00 - 18:00 (dois dias)",
       local: "Auditório Principal SENAI",
