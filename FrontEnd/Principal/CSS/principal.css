@@ -300,18 +300,10 @@ body {
   object-fit: cover;
 }
 
-.status {
-  position: absolute;
-  bottom: 5px;
-  right: 5px;
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  border: 2px solid var(--bg-secondary);
-}
 
-.status.online { background-color: var(--online); }
-.status.away { background-color: var(--away); }
+
+
+
 
 .user-info h2 {
   font-size: 1.25rem;
@@ -423,9 +415,8 @@ body {
 }
 
 .friend-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.friend-avatar::after { content: ''; position: absolute; bottom: 2px; right: 2px; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--bg-secondary); }
-.friend-avatar.online::after { background-color: var(--online); }
-.friend-avatar.away::after { background-color: var(--away); }
+
+
 
 .friend span {
   font-size: 0.75rem;

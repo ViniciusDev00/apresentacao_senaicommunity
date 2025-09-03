@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
         id: 1,
         name: "Vinicius Gallo Santos",
         username: "Vinicius G.",
-        avatar: "img/viniciusGallo.jpg",
+        avatar: "/img/perfil.png",
         title: "Estudante de ADS",
         connections: 11,
         projects: 2
