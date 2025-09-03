@@ -645,7 +645,7 @@ body {
   gap: 0.5rem;
   width: 320px;
   max-width: 90%;
-  pointer-events: none; /* Não bloquear cliques por baixo */
+  pointer-events: none;
 }
 
 .notification {
@@ -663,7 +663,7 @@ body {
   align-items: center;
   min-height: 40px;
   word-break: break-word;
-  pointer-events: auto; /* Permitir cliques na notificação */
+  pointer-events: auto;
 }
 
 .notification.show {
@@ -675,10 +675,9 @@ body {
 .notification.info { border-left: 4px solid var(--accent-primary); }
 .notification.error { border-left: 4px solid var(--danger); }
 
-
 /* Menu Dropdown de Notificações */
 .notification-menu {
-  display: block; /* Este é o problema */
+  display: none;
   position: absolute;
   top: 120%;
   right: 0;
@@ -688,23 +687,16 @@ body {
   border-radius: var(--card-radius);
   box-shadow: var(--shadow);
   z-index: 1001;
-  opacity: 0;
-  transform: translateY(10px);
-  pointer-events: none;
-  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .notification-menu.show {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
+  display: block;
 }
 
 .notification-menu .notification {
   padding: 0.75rem 1rem;
   border-bottom: 1px solid var(--border-color);
   color: var(--text-primary);
-  /* Resetando estilos de animação do pop-up */
   opacity: 1;
   transform: none;
   transition: background-color 0.2s ease;
@@ -769,4 +761,10 @@ body {
   .sidebar.mobile-hidden { transform: translateX(-100%); }
   .sidebar:not(.mobile-hidden) { transform: translateX(0); }
   .user-dropdown .dropdown-menu { width: 180px; }
+
+  /* ADICIONADO: Esconde os ícones de Início e Mensagens no mobile */
+  .nav-icon[data-tooltip="Início"],
+  .nav-icon[data-tooltip="Mensagens"] {
+    display: none;
+  }
 }

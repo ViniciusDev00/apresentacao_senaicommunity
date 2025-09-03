@@ -13,7 +13,7 @@ const ChatApp = {
         ],
         conversations: [
             {
-                id: 'g1', type: 'group', nome: "Projeto IoT", avatar: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=400&q=80",
+                id: 'g1', type: 'group', nome: "Projeto IoT", avatar: "/img/unnamed.png",
                 membros: [{ id: 1, nome: "Vinicius Gallo Santos", avatar: "https://randomuser.me/api/portraits/men/32.jpg" }, { id: 2, nome: "Miguel Piscki", avatar: "https://randomuser.me/api/portraits/men/22.jpg" }, { id: 3, nome: "Ana Silva", avatar: "https://randomuser.me/api/portraits/women/33.jpg" }],
                 mensagens: [
                     { autor: 2, texto: "Oi pessoal, novidades do projeto?", hora: "19:01" },
@@ -24,14 +24,11 @@ const ChatApp = {
                 ]
             },
             {
-                id: 'g2', type: 'group', nome: "PrecisionCraft", avatar: "/FrontEnd/img/cnc.png",
-                membros: [{ id: 1, nome: "Vinicius Gallo Santos", avatar: "https://randomuser.me/api/portraits/men/32.jpg" },  { id: 2, nome: "Julia", avatar: "https://randomuser.me/api/portraits/men/22.jpg" }, 
-                    { id: 8, nome: "Carlos", avatar: "https://randomuser.me/api/portraits/men/32.jpg" }, { id: 9, nome: "Laura", avatar: "https://randomuser.me/api/portraits/men/22.jpg" }
+                id: 'g2', type: 'group', nome: "PrecisionCraft", avatar: "/img/cnc.png",
+                membros: [{ id: 1, nome: "Vinicius Gallo Santos", avatar: "https://randomuser.me/api/portraits/men/32.jpg" },  { id: 2, nome: "Julia", avatar: "https://randomuser.me/api/portraits/women/48.jpg" }, 
+                    { id: 8, nome: "Carlos", avatar: "https://randomuser.me/api/portraits/men/51.jpg" }, { id: 9, nome: "Laura", avatar: "https://randomuser.me/api/portraits/women/55.jpg" }
                 ],
-                mensagens: [
-                    { autor: 6, texto: "Olá Pessoal!", hora: "11:22" },
-                    
-                ]
+                mensagens: [ { autor: 6, texto: "Olá Pessoal!", hora: "11:22" } ]
             },
             {
                 id: 'dm1', type: 'dm',
@@ -47,6 +44,7 @@ const ChatApp = {
         filteredConversations: []
     },
     elements: {
+        chatContainer: document.querySelector('.chat-container'), // ✅ ADICIONADO
         conversationsList: document.getElementById('conversations-list'),
         conversationSearch: document.getElementById('convo-search'),
         chatHeaderArea: document.getElementById('chat-header-area'),
@@ -62,7 +60,6 @@ const ChatApp = {
     },
     render: {
         conversationsList() {
-            // ... (código sem alterações)
             const { conversationsList } = ChatApp.elements;
             const { filteredConversations, selectedConversationId } = ChatApp.state;
             if (!conversationsList) return;
@@ -84,21 +81,29 @@ const ChatApp = {
             });
         },
         chatHeader() {
-            // ... (código sem alterações)
             const { chatHeaderArea } = ChatApp.elements;
             const convo = ChatApp.utils.getSelectedConversation();
-            if (!chatHeaderArea) return;
-            if (!convo) { if(chatHeaderArea) chatHeaderArea.innerHTML = ''; return; }
-            let headerHTML = '';
-            if (convo.type === 'group') {
-                headerHTML = `<div class="chat-group-info"><img src="${convo.avatar}" class="chat-group-avatar" alt="Grupo"><div><h3 class="chat-group-title">${convo.nome}</h3><div class="chat-members-list">${convo.membros.map(m => m.nome.split(" ")[0]).join(", ")}</div></div></div>`;
-            } else {
-                headerHTML = `<div class="chat-group-info"><img src="${convo.otherUser.avatar}" class="chat-group-avatar" alt="Usuário"><div><h3 class="chat-group-title">${convo.otherUser.nome}</h3>${convo.otherUser.online ? `<div class="chat-user-status">Online</div>` : ''}</div></div>`;
+            if (!chatHeaderArea || !convo) {
+                if (chatHeaderArea) chatHeaderArea.innerHTML = '';
+                return;
             }
-            chatHeaderArea.innerHTML = headerHTML;
+
+            // ✅ LÓGICA MODIFICADA PARA ADICIONAR O BOTÃO DE VOLTAR
+            const backButtonHTML = `<button class="back-to-list-btn"><i class="fas fa-arrow-left"></i></button>`;
+            let convoInfoHTML = '';
+            if (convo.type === 'group') {
+                convoInfoHTML = `<div class="chat-group-info"><img src="${convo.avatar}" class="chat-group-avatar" alt="Grupo"><div><h3 class="chat-group-title">${convo.nome}</h3><div class="chat-members-list">${convo.membros.map(m => m.nome.split(" ")[0]).join(", ")}</div></div></div>`;
+            } else {
+                convoInfoHTML = `<div class="chat-group-info"><img src="${convo.otherUser.avatar}" class="chat-group-avatar" alt="Usuário"><div><h3 class="chat-group-title">${convo.otherUser.nome}</h3>${convo.otherUser.online ? `<div class="chat-user-status">Online</div>` : ''}</div></div>`;
+            }
+            chatHeaderArea.innerHTML = backButtonHTML + convoInfoHTML;
+            
+            // Adiciona o evento de clique ao novo botão
+            const backBtn = chatHeaderArea.querySelector('.back-to-list-btn');
+            if (backBtn) {
+                backBtn.addEventListener('click', ChatApp.handlers.goBackToList);
+            }
         },
-        
-        // FUNÇÃO DE RENDERIZAR MENSAGENS ATUALIZADA
         chatMessages() {
             const { chatMessagesArea } = ChatApp.elements;
             const convo = ChatApp.utils.getSelectedConversation();
@@ -106,68 +111,68 @@ const ChatApp = {
                 if(chatMessagesArea) chatMessagesArea.innerHTML = `<div class="empty-chat">Selecione uma conversa para começar.</div>`;
                 return; 
             }
-
             chatMessagesArea.innerHTML = '';
             let lastAuthorId = null;
             let currentMessageBlock = null;
-
             convo.mensagens.forEach(msg => {
                 const user = ChatApp.utils.getUser(convo, msg.autor);
                 const sideClass = msg.autor === ChatApp.state.currentUser.id ? 'me' : 'outro';
-
                 if (msg.autor !== lastAuthorId) {
                     const currentMessageGroup = document.createElement('div');
                     currentMessageGroup.className = `message-group ${sideClass}`;
-                    
                     const avatarHTML = (sideClass === 'outro') ? `<div class="message-avatar"><img src="${user.avatar}" alt="${user.nome}"></div>` : '';
-                    
                     currentMessageBlock = document.createElement('div');
                     currentMessageBlock.className = 'message-block';
-                    
-                    // *** A CORREÇÃO ESTÁ AQUI ***
-                    // Adiciona o cabeçalho (nome e hora) APENAS se a mensagem for de outra pessoa
                     if (sideClass === 'outro') {
                         const header = document.createElement('div');
                         header.className = 'message-author-header';
                         header.innerHTML = `<strong>${user.nome.split(" ")[0]}</strong><span>${msg.hora}</span>`;
                         currentMessageBlock.appendChild(header);
                     }
-
                     if (avatarHTML) {
                         const tempDiv = document.createElement('div');
                         tempDiv.innerHTML = avatarHTML;
                         currentMessageGroup.appendChild(tempDiv.firstChild);
                     }
                     currentMessageGroup.appendChild(currentMessageBlock);
-                    
                     chatMessagesArea.appendChild(currentMessageGroup);
                 }
-
                 const messageContent = document.createElement('div');
                 messageContent.className = 'message-content';
                 messageContent.innerHTML = msg.texto.replace(/\n/g, '<br>');
-
                 if (currentMessageBlock) {
                     currentMessageBlock.appendChild(messageContent);
                 }
-                
                 lastAuthorId = msg.autor;
             });
-
             chatMessagesArea.scrollTop = chatMessagesArea.scrollHeight;
         }
     },
     handlers: {
-        // ... (código sem alterações)
         selectConversation(convoId) {
             ChatApp.state.selectedConversationId = convoId;
-            const { chatInput, chatSendBtn } = ChatApp.elements;
+            const { chatInput, chatSendBtn, chatContainer } = ChatApp.elements; // Pega o container
             ChatApp.render.conversationsList();
             ChatApp.render.chatHeader();
             ChatApp.render.chatMessages();
             if (chatInput) chatInput.disabled = false;
             if (chatSendBtn) chatSendBtn.disabled = false;
             if (chatInput) chatInput.focus();
+
+            // ✅ ADICIONADO: Ativa a classe para mostrar o chat no mobile
+            if (chatContainer) {
+                chatContainer.classList.add('mobile-chat-active');
+            }
+        },
+        // ✅ ADICIONADO: Nova função para o botão de voltar
+        goBackToList() {
+            const { chatContainer } = ChatApp.elements;
+            if (chatContainer) {
+                chatContainer.classList.remove('mobile-chat-active');
+            }
+            // Opcional: Limpa a seleção para que a borda azul suma da lista
+            ChatApp.state.selectedConversationId = null; 
+            ChatApp.render.conversationsList();
         },
         sendMessage(e) {
             e.preventDefault();
@@ -197,17 +202,13 @@ const ChatApp = {
         openNewConversationModal() {
             const { newConvoUserList, addConvoModal, userSearchInput } = ChatApp.elements;
             if (!newConvoUserList || !addConvoModal) return;
-
             const existingDmUserIds = ChatApp.state.conversations
                 .filter(c => c.type === 'dm')
                 .map(c => c.otherUser.id);
-            
             const availableUsers = ChatApp.state.allUsers.filter(user => 
                 user.id !== ChatApp.state.currentUser.id && !existingDmUserIds.includes(user.id)
             );
-
             newConvoUserList.innerHTML = ''; 
-
             if (availableUsers.length === 0) {
                 newConvoUserList.innerHTML = `<p style="text-align: center; color: var(--text-secondary); padding: 1rem 0;">Não há novos usuários para conversar.</p>`;
             } else {
@@ -219,7 +220,6 @@ const ChatApp = {
                     newConvoUserList.appendChild(userItem);
                 });
             }
-            
             userSearchInput.value = '';
             addConvoModal.style.display = 'flex';
             userSearchInput.focus();
@@ -233,13 +233,10 @@ const ChatApp = {
         startNewDmConversation(e) {
             const userItem = e.target.closest('.user-list-item');
             if (!userItem) return;
-
             const targetUserId = parseInt(userItem.dataset.userId, 10);
             const targetUser = ChatApp.state.allUsers.find(u => u.id === targetUserId);
             const currentUser = ChatApp.state.currentUser;
-
             if (!targetUser) return;
-
             const newConvoId = `dm_${currentUser.id}-${targetUser.id}`;
             const newConversation = {
                 id: newConvoId,
@@ -248,10 +245,8 @@ const ChatApp = {
                 membros: [currentUser, targetUser],
                 mensagens: []
             };
-
             ChatApp.state.conversations.unshift(newConversation);
             ChatApp.state.filteredConversations = [...ChatApp.state.conversations];
-            
             ChatApp.handlers.closeNewConversationModal();
             ChatApp.render.conversationsList();
             ChatApp.handlers.selectConversation(newConvoId);
@@ -270,7 +265,6 @@ const ChatApp = {
         }
     },
     utils: {
-        // ... (código sem alterações)
         getSelectedConversation() {
             return ChatApp.state.conversations.find(c => c.id === ChatApp.state.selectedConversationId);
         },
@@ -283,10 +277,8 @@ const ChatApp = {
         }
     },
     init() {
-        // ... (código sem alterações)
         this.state.filteredConversations = [...this.state.conversations];
         const { conversationsList, conversationSearch, chatForm, addGroupBtn, closeModalBtn, addConvoModal, newConvoUserList, userSearchInput } = this.elements;
-        
         if (conversationsList) {
             conversationsList.addEventListener('click', (e) => {
                 const card = e.target.closest('.convo-card');
@@ -302,7 +294,6 @@ const ChatApp = {
         if (addGroupBtn) {
             addGroupBtn.addEventListener('click', () => this.handlers.openNewConversationModal());
         }
-        
         if (closeModalBtn) {
             closeModalBtn.addEventListener('click', () => this.handlers.closeNewConversationModal());
         }
@@ -319,7 +310,6 @@ const ChatApp = {
         if(userSearchInput) {
             userSearchInput.addEventListener('input', (e) => this.handlers.filterAvailableUsers(e));
         }
-
         this.render.conversationsList();
         this.render.chatHeader();
         this.render.chatMessages();

@@ -1,3 +1,10 @@
+/* Esconde a barra de navegação principal em telas grandes nesta página específica */
+@media (min-width: 769px) {
+    .sidebar {
+        display: none;
+    }
+}
+
 /* LAYOUT GERAL COM A NAV-RAIL */
 .main-wrapper {
   display: flex;
@@ -189,12 +196,22 @@
  background: var(--bg-primary); border: none; overflow: hidden; height: 100%;
 }
 .chat-header-area {
- background: var(--bg-secondary);
- padding: 1rem 1.5rem;
- border-bottom: 1.5px solid var(--border-color);
- display: flex; align-items: center; gap: 1.1rem;
- min-height: 70px;
+    background: var(--bg-secondary);
+    padding: 0.75rem 1rem;
+    border-bottom: 1.5px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    min-height: auto;
 }
+
+.chat-group-info {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex-grow: 1; 
+    min-width: 0;
+}
+
 .chat-group-avatar {
  width: 48px; height: 48px; border-radius: 12px; object-fit: cover;
 }
@@ -275,7 +292,7 @@
     margin-top: 4px;
     line-height: 1.5;
     color: var(--text-primary);
-    word-break: break-word;
+    overflow-wrap: break-word;
 }
 .message-group.me .message-content {
     background: var(--accent-primary);
@@ -407,3 +424,57 @@
     font-weight: 600;
     color: var(--text-primary);
 }
+
+/* --- INÍCIO: CÓDIGO DE RESPONSIVIDADE PARA CELULAR --- */
+.back-to-list-btn {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .nav-rail {
+        display: none;
+    }
+
+    .chat-container {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .chat-sidebar {
+        width: 100%;
+        position: absolute;
+        height: 100%;
+        transform: translateX(0);
+        transition: transform 0.3s ease-in-out;
+        border-right: none;
+        z-index: 2;
+    }
+
+    .chat-main {
+        width: 100%;
+        position: absolute;
+        height: 100%;
+        transform: translateX(100%);
+        transition: transform 0.3s ease-in-out;
+        z-index: 1;
+    }
+
+    .chat-container.mobile-chat-active .chat-sidebar {
+        transform: translateX(-100%);
+    }
+
+    .chat-container.mobile-chat-active .chat-main {
+        transform: translateX(0);
+    }
+
+    .back-to-list-btn {
+        display: block;
+        background: none;
+        border: none;
+        color: var(--text-secondary);
+        font-size: 1.25rem;
+        cursor: pointer;
+        margin-right: 0.75rem;
+    }
+}
+/* --- FIM: CÓDIGO DE RESPONSIVIDADE PARA CELULAR --- */
