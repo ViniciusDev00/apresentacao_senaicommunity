@@ -146,6 +146,8 @@
  cursor: pointer;
  transition: background .17s;
  border: 1.5px solid transparent;
+ /* LINHA ADICIONADA PARA O SEPARADOR */
+ border-bottom: 1px solid var(--border-color);
 }
 .convo-card.selected, .convo-card:hover {
  background: var(--bg-tertiary);
