@@ -8,7 +8,7 @@
 /* LAYOUT GERAL COM A NAV-RAIL */
 .main-wrapper {
   display: flex;
-  height: calc(100vh - 70px); /* Altura da viewport menos o topbar */
+  height: calc(100vh - 70px);
 }
 
 /* BARRA DE NAVEGAÇÃO PRINCIPAL (RAIL) */
@@ -155,19 +155,19 @@
 }
 
 .convo-avatar-wrapper {
-    position: relative;
+ 
     flex-shrink: 0;
 }
 .convo-avatar-wrapper .avatar {
  width: 46px;
  height: 46px;
- border-radius: 12px;
+ border-radius: 50%;
  object-fit: cover;
 }
 .status-dot {
     position: absolute;
-    bottom: -2px;
-    right: -2px;
+    bottom: 0; /* ALTERADO DE -2px */
+    right: 0;  /* ALTERADO DE -2px */
     width: 15px;
     height: 15px;
     background-color: var(--online);
@@ -286,7 +286,7 @@
 
 .message-content {
     position: relative;
-    background: var(--bg-tertiary);
+    background: var(--incoming-msg-bg);
     padding: 0.6rem 1rem;
     border-radius: 18px;
     margin-top: 4px;
