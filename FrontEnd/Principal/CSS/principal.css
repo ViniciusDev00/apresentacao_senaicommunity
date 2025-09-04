@@ -816,12 +816,20 @@ body {
   transition: background-color 0.2s ease; /* Transição suave para a mudança de cor */
 }
 
-.search-result i {
-  margin-right: 0.75rem;
-  color: var(--text-secondary);
-}
+/* ==========================================================================
+   CORREÇÃO DEFINITIVA PARA ÍCONES DA BARRA DE PESQUISA
+   ========================================================================== */
+
 
 /* Esta é a regra que muda a cor ao passar o mouse */
 .search-result:hover {
   background-color: var(--bg-tertiary); /* Cor de fundo mais clara no hover */
+}
+
+/* Novo estilo para os ícones SVG na barra de pesquisa */
+.search-result svg {
+  width: 16px;
+  height: 16px;
+  margin-right: 0.75rem;
+  color: var(--text-secondary);
 }
